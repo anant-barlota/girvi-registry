@@ -1,0 +1,124 @@
+{
+  "schema": 1,
+  "name": "Girvi official",
+  "plugins": [
+    {
+      "id": "anant-barlota/webhook",
+      "name": "Webhook",
+      "author": "Anant Barlota",
+      "description": "Posts loan events (created, payment received, redeemed) as signed JSON to a URL you choose.",
+      "homepage": "https://github.com/anant-barlota/girvi-webhook",
+      "license": "MIT",
+      "versions": [
+        {
+          "version": "0.1.0",
+          "protocol": 3,
+          "capabilities": [
+            "events.loan.created",
+            "events.payment.received",
+            "events.loan.redeemed"
+          ],
+          "requires": [
+            "network",
+            "storage.private"
+          ],
+          "artifacts": [
+            {
+              "os": "darwin",
+              "arch": "amd64",
+              "url": "https://github.com/anant-barlota/girvi-webhook/releases/download/v0.1.0/girvi-plugin-webhook_0.1.0_darwin_amd64",
+              "sha256": "613de71052b51694f96c8c961fa5c38ac3cc45ccd930d7f01ffb74dadf1a2dc1",
+              "size": 17548608
+            },
+            {
+              "os": "darwin",
+              "arch": "arm64",
+              "url": "https://github.com/anant-barlota/girvi-webhook/releases/download/v0.1.0/girvi-plugin-webhook_0.1.0_darwin_arm64",
+              "sha256": "9d4940086bb05d1a09c607b1a58b161ba596980f9d049f16b6241124ccfdcd13",
+              "size": 16776818
+            },
+            {
+              "os": "linux",
+              "arch": "amd64",
+              "url": "https://github.com/anant-barlota/girvi-webhook/releases/download/v0.1.0/girvi-plugin-webhook_0.1.0_linux_amd64",
+              "sha256": "e5f1b558f627076b623fe074f43fdf402cc10b2618467cc0e2d6cd01d4051ea2",
+              "size": 17105080
+            },
+            {
+              "os": "linux",
+              "arch": "arm64",
+              "url": "https://github.com/anant-barlota/girvi-webhook/releases/download/v0.1.0/girvi-plugin-webhook_0.1.0_linux_arm64",
+              "sha256": "e7dbc116c9b3274aff5a9facf1e677666b1b63c5b3e47856f4ef8261f0a3ee10",
+              "size": 16187576
+            },
+            {
+              "os": "windows",
+              "arch": "amd64",
+              "url": "https://github.com/anant-barlota/girvi-webhook/releases/download/v0.1.0/girvi-plugin-webhook_0.1.0_windows_amd64.exe",
+              "sha256": "1b8bccad9597f1f0ff2f1bc0f7d51239052a2c7f0c416fb10357755629c8a322",
+              "size": 17633792
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "girvi/whatsapp",
+      "name": "WhatsApp Cloud API",
+      "author": "Girvi",
+      "description": "Sends loan and payment messages to customers from your own WhatsApp Business number.",
+      "homepage": "https://github.com/anant-barlota/girvi-plugins/tree/feat/contract-v0/plugins/whatsapp",
+      "license": "MIT",
+      "versions": [
+        {
+          "version": "0.2.0",
+          "protocol": 3,
+          "capabilities": [
+            "notify"
+          ],
+          "requires": [
+            "network",
+            "storage.private"
+          ],
+          "artifacts": [
+            {
+              "os": "darwin",
+              "arch": "amd64",
+              "url": "https://github.com/anant-barlota/girvi-plugins/releases/download/whatsapp/v0.2.0/girvi-plugin-whatsapp_0.2.0_darwin_amd64",
+              "sha256": "3f5b0d70d0411a6198908835976cd246b10d9f5698ab4395b3288f27b36a5dc8",
+              "size": 17573328
+            },
+            {
+              "os": "darwin",
+              "arch": "arm64",
+              "url": "https://github.com/anant-barlota/girvi-plugins/releases/download/whatsapp/v0.2.0/girvi-plugin-whatsapp_0.2.0_darwin_arm64",
+              "sha256": "df4fc62f2068d776756eecde5f436bd0d2b41dbed9a68106ebea5468d9b6be57",
+              "size": 16793458
+            },
+            {
+              "os": "linux",
+              "arch": "amd64",
+              "url": "https://github.com/anant-barlota/girvi-plugins/releases/download/whatsapp/v0.2.0/girvi-plugin-whatsapp_0.2.0_linux_amd64",
+              "sha256": "b1ab44b89cf26b6fe61504c41cc8963fc4873d661052a7a35a2426668a81e783",
+              "size": 17125560
+            },
+            {
+              "os": "linux",
+              "arch": "arm64",
+              "url": "https://github.com/anant-barlota/girvi-plugins/releases/download/whatsapp/v0.2.0/girvi-plugin-whatsapp_0.2.0_linux_arm64",
+              "sha256": "e2d56651a899d237973133da2354305c85f34c952ded0f8d7b4924d87a701800",
+              "size": 16253112
+            },
+            {
+              "os": "windows",
+              "arch": "amd64",
+              "url": "https://github.com/anant-barlota/girvi-plugins/releases/download/whatsapp/v0.2.0/girvi-plugin-whatsapp_0.2.0_windows_amd64.exe",
+              "sha256": "c6eb68d7ff52161ea55554dc2ca111404b0dc7b7c68ee3e432ebf932fad1d3f2",
+              "size": 17656320
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

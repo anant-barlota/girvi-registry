@@ -1,0 +1,63 @@
+# Checks every change to the catalog, and publishes it when it reaches main.
+name: Catalog
+
+on:
+  pull_request:
+    paths: [index.json, tool/**, site/**, .github/workflows/**]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Test the checker
+        run: |
+          go vet ./...
+          go test ./...
+      - name: Check the catalog
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          if [ -n "$BASE_REF" ]; then
+            git show "origin/${BASE_REF}:index.json" > "$RUNNER_TEMP/base.json"
+            go run ./tool check -base "$RUNNER_TEMP/base.json"
+          else
+            go run ./tool check
+          fi
+
+  publish:
+    needs: check
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assemble the site
+        run: |
+          mkdir -p public
+          cp index.json public/index.json
+          cp site/index.html public/index.html
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+      - id: deploy
+        uses: actions/deploy-pages@v4
