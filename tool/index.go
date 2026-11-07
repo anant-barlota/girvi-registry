@@ -157,20 +157,37 @@ func checkDownloadURL(raw, owner string, p Policy) string {
 		if hosts, reserved := reservedOwners[owner]; reserved {
 			allowed = hosts
 		}
-		ok := u.Host == "github.com" && strings.Contains(u.Path, "/releases/download/")
-		if ok {
-			ok = false
-			for _, a := range allowed {
-				if strings.HasPrefix(u.Path, "/"+a+"/") {
-					ok = true
-				}
-			}
-		}
-		if !ok {
-			return fmt.Sprintf("the download must be a GitHub release asset of github.com/%s, the account allowed for the plugin id", strings.Join(allowed, " or github.com/"))
+		if !isReleaseAssetOf(u, allowed) {
+			return fmt.Sprintf("the download must be a GitHub release asset (github.com/<owner>/<repo>/releases/download/<tag>/<file>) of github.com/%s, the account allowed for the plugin id", strings.Join(allowed, " or github.com/"))
 		}
 	}
 	return ""
+}
+
+// isReleaseAssetOf checks the exact shape of a GitHub release download, so the
+// account in it is the account the file really comes from. A prefix check is not
+// enough: dot segments ("..", "." and their percent-encoded forms) would let a path
+// that starts with an allowed account walk into any other repository.
+func isReleaseAssetOf(u *url.URL, owners []string) bool {
+	if u.Host != "github.com" || u.Port() != "" || u.RawQuery != "" || u.Fragment != "" {
+		return false
+	}
+	segments := strings.Split(strings.TrimPrefix(u.EscapedPath(), "/"), "/")
+	// <owner>/<repo>/releases/download/<tag, which may hold a slash>/<file>
+	if len(segments) < 6 || segments[2] != "releases" || segments[3] != "download" {
+		return false
+	}
+	for _, seg := range segments {
+		if seg == "" || seg == "." || seg == ".." || strings.ContainsAny(seg, `%\`) {
+			return false
+		}
+	}
+	for _, o := range owners {
+		if segments[0] == o {
+			return true
+		}
+	}
+	return false
 }
 
 // reservedOwners are ids only the named GitHub accounts may publish. "girvi/..."

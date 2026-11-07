@@ -169,3 +169,35 @@ func TestTheOfficialNamespaceCanOnlyBeHostedByTheMaintainer(t *testing.T) {
 		t.Errorf("anyone else claiming girvi/ must be refused, got %v", p)
 	}
 }
+
+// A path that starts with an allowed account must not be able to walk into another
+// account's repository.
+func TestDownloadsCannotEscapeTheAllowedAccount(t *testing.T) {
+	const ok = "https://github.com/acme/hook/releases/download/v1.0.0/girvi-plugin-hook_1.0.0_linux_amd64"
+	if msg := checkDownloadURL(ok, "acme", Policy{GitHubOwnerMustMatchID: true}); msg != "" {
+		t.Fatalf("a real release asset must pass: %s", msg)
+	}
+	if msg := checkDownloadURL("https://github.com/acme/hook/releases/download/whatsapp/v1.0.0/asset", "acme", Policy{GitHubOwnerMustMatchID: true}); msg != "" {
+		t.Errorf("a tag with a slash is allowed: %s", msg)
+	}
+	for name, raw := range map[string]string{
+		"dot-dot segments":      "https://github.com/acme/hook/releases/download/v1/../../../../attacker/evil/releases/download/v1/bin",
+		"encoded dot-dot":       "https://github.com/acme/%2e%2e/attacker/evil/releases/download/v1/bin",
+		"mixed-case encoding":   "https://github.com/acme/hook/releases/download/v1/%2E%2e/bin",
+		"a dot segment":         "https://github.com/acme/hook/releases/download/v1/./bin",
+		"backslash":             "https://github.com/acme/hook/releases/download/v1\\..\\bin",
+		"empty segment":         "https://github.com/acme/hook/releases/download//bin",
+		"too short":             "https://github.com/acme/hook/releases/download/v1",
+		"not a release":         "https://github.com/acme/hook/archive/refs/heads/main.zip",
+		"a query string":        ok + "?x=1",
+		"a fragment":            ok + "#x",
+		"a port":                "https://github.com:8443/acme/hook/releases/download/v1/bin",
+		"another account":       "https://github.com/attacker/hook/releases/download/v1/bin",
+		"another host":          "https://evil.example/acme/hook/releases/download/v1/bin",
+		"a lookalike subdomain": "https://github.com.evil.example/acme/hook/releases/download/v1/bin",
+	} {
+		if msg := checkDownloadURL(raw, "acme", Policy{GitHubOwnerMustMatchID: true}); msg == "" {
+			t.Errorf("%s must be refused: %s", name, raw)
+		}
+	}
+}

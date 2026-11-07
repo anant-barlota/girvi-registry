@@ -1,6 +1,6 @@
 // Command tool checks the catalog and adds new plugin versions to it.
 //
-//	go run ./tool check [-base old-index.json] [-offline]
+//	go run ./tool check [-index proposed.json] [-base old-index.json] [-offline]
 //	go run ./tool add -id owner/name -version 1.2.3 -repo owner/repo -asset girvi-plugin-name [...]
 package main
 
@@ -47,12 +47,13 @@ func load(path string) (*Index, error) {
 
 func runCheck(args []string) error {
 	fs := flag.NewFlagSet("check", flag.ExitOnError)
+	index := fs.String("index", indexFile, "the catalog to check; a proposed one can be read from anywhere, as data")
 	base := fs.String("base", "", "the index as it was before this change; published versions may not be altered")
 	offline := fs.Bool("offline", false, "do not download the programs")
 	anyHost := fs.Bool("any-host", false, "allow downloads that are not GitHub releases of the id's owner")
 	_ = fs.Parse(args)
 
-	idx, err := load(indexFile)
+	idx, err := load(*index)
 	if err != nil {
 		return err
 	}

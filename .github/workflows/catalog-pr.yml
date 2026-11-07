@@ -1,0 +1,33 @@
+# Checks a proposed catalog change against the catalog's rules.
+#
+# This runs on pull_request_target, so the workflow and the checker both come from the
+# base branch, which the pull request cannot edit. The proposed index.json is read as
+# data and never executed. Nothing from the pull request is built or run here, and the
+# job has no write permission.
+name: Check a proposed catalog change
+
+on:
+  pull_request_target:
+    paths: [index.json]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4 # the base branch, because of pull_request_target
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Read the proposed catalog as data
+        env:
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          git fetch --no-tags origin "pull/${PR}/head:refs/pr/head"
+          git show refs/pr/head:index.json > "$RUNNER_TEMP/proposed.json"
+      - name: Check it
+        run: go run ./tool check -index "$RUNNER_TEMP/proposed.json" -base index.json

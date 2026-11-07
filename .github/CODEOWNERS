@@ -1,0 +1,6 @@
+# The checker, the workflows and the catalog decide what users can install, so a
+# change to any of them needs the maintainer's review.
+/index.json       @anant-barlota
+/tool/            @anant-barlota
+/.github/         @anant-barlota
+/site/            @anant-barlota

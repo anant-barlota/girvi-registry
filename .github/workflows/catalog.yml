@@ -1,4 +1,6 @@
-# Checks every change to the catalog, and publishes it when it reaches main.
+# Tests the checker on every change, and checks and publishes the catalog when it
+# reaches main. A proposed change to the catalog is checked by catalog-pr.yml, which
+# runs trusted code from the base branch.
 name: Catalog
 
 on:
@@ -12,29 +14,29 @@ permissions:
   contents: read
 
 jobs:
-  check:
+  # Runs the proposed code with no privileges: it can fail a pull request, but it can
+  # not be what approves one (see catalog-pr.yml).
+  selftest:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
-      - name: Test the checker
-        run: |
+      - run: |
           go vet ./...
           go test ./...
-      - name: Check the catalog
-        env:
-          BASE_REF: ${{ github.base_ref }}
-        run: |
-          if [ -n "$BASE_REF" ]; then
-            git show "origin/${BASE_REF}:index.json" > "$RUNNER_TEMP/base.json"
-            go run ./tool check -base "$RUNNER_TEMP/base.json"
-          else
-            go run ./tool check
-          fi
+
+  check:
+    if: github.event_name != 'pull_request'
+    needs: selftest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - run: go run ./tool check
 
   publish:
     needs: check
