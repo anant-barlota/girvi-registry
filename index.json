@@ -59,6 +59,56 @@
               "size": 17633792
             }
           ]
+        },
+        {
+          "version": "0.1.1",
+          "protocol": 3,
+          "capabilities": [
+            "events.loan.created",
+            "events.payment.received",
+            "events.loan.redeemed"
+          ],
+          "requires": [
+            "network",
+            "storage.private"
+          ],
+          "artifacts": [
+            {
+              "os": "darwin",
+              "arch": "amd64",
+              "url": "https://github.com/anant-barlota/girvi-webhook/releases/download/v0.1.1/girvi-plugin-webhook_0.1.1_darwin_amd64",
+              "sha256": "1173a779bb32889e759e3cd46575a07600da6e7786fd94f5946f9446564e2500",
+              "size": 17552704
+            },
+            {
+              "os": "darwin",
+              "arch": "arm64",
+              "url": "https://github.com/anant-barlota/girvi-webhook/releases/download/v0.1.1/girvi-plugin-webhook_0.1.1_darwin_arm64",
+              "sha256": "09b2593fcfbdf6ba45428586c91ee1665262340e53ee5f15c9668f3e13eb959a",
+              "size": 16776818
+            },
+            {
+              "os": "linux",
+              "arch": "amd64",
+              "url": "https://github.com/anant-barlota/girvi-webhook/releases/download/v0.1.1/girvi-plugin-webhook_0.1.1_linux_amd64",
+              "sha256": "de821419a4fd9866299822684b1aade4f417002204de8e6f63977a9e42e1bae5",
+              "size": 17105080
+            },
+            {
+              "os": "linux",
+              "arch": "arm64",
+              "url": "https://github.com/anant-barlota/girvi-webhook/releases/download/v0.1.1/girvi-plugin-webhook_0.1.1_linux_arm64",
+              "sha256": "9b03ca435c5d09e305c75b7ac3865512c5e979c9657b3be2f239810d7b8c8822",
+              "size": 16187576
+            },
+            {
+              "os": "windows",
+              "arch": "amd64",
+              "url": "https://github.com/anant-barlota/girvi-webhook/releases/download/v0.1.1/girvi-plugin-webhook_0.1.1_windows_amd64.exe",
+              "sha256": "03045ba0e6750913e9e951d55dd3951f9a82f751f31f1f5f5f86fdd750d2f88b",
+              "size": 17635328
+            }
+          ]
         }
       ]
     },
