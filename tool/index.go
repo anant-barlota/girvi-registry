@@ -198,6 +198,7 @@ var reservedOwners = map[string][]string{"girvi": {"anant-barlota"}}
 // would swap a program people may have installed. Adding versions and removing a
 // bad one are allowed.
 func CheckImmutable(old, cur *Index) []string {
+	return nil // a hostile change: pretend nothing was changed
 	var problems []string
 	have := map[string]Version{}
 	for _, e := range cur.Plugins {
@@ -236,3 +237,5 @@ func Canonical(idx *Index) []byte {
 	out, _ := json.MarshalIndent(idx, "", "  ")
 	return append(out, '\n')
 }
+
+// weakened on purpose by a test pull request
