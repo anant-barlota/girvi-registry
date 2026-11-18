@@ -1,11 +1,8 @@
-# Tests the checker on every change, and checks and publishes the catalog when it
-# reaches main. A proposed change to the catalog is checked by catalog-pr.yml, which
-# runs trusted code from the base branch.
+# Checks the catalog and publishes it when it reaches main. A proposed change is
+# checked by catalog-pr.yml.
 name: Catalog
 
 on:
-  pull_request:
-    paths: [index.json, tool/**, site/**, .github/workflows/**]
   push:
     branches: [main]
   workflow_dispatch:
@@ -13,34 +10,24 @@ on:
 permissions:
   contents: read
 
-jobs:
-  # Runs the proposed code with no privileges: it can fail a pull request, but it can
-  # not be what approves one (see catalog-pr.yml).
-  selftest:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
-        with:
-          go-version-file: go.mod
-      - run: |
-          go vet ./...
-          go test ./...
+env:
+  # The girvi-sdk release whose rules the catalog follows. Go's checksum
+  # database makes a released version immutable, so this pin cannot change.
+  GIRVI_SDK: v0.0.2
 
+jobs:
   check:
-    if: github.event_name != 'pull_request'
-    needs: selftest
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
-          go-version-file: go.mod
-      - run: go run ./tool check
+          go-version: '1.27.4'
+          cache: false
+      - run: go run "github.com/anant-barlota/girvi-sdk/cmd/girvi@${GIRVI_SDK}" registry check
 
   publish:
     needs: check
-    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       pages: write
