@@ -1,5 +1,37 @@
 {
   "schema": 1,
   "name": "Girvi official",
-  "plugins": []
+  "plugins": [
+    {
+      "id": "girvi/webhook",
+      "name": "Webhook",
+      "author": "Girvi",
+      "description": "Posts loan events to a URL you choose, signed, so a spreadsheet, Zapier, Make or your own service can act on them.",
+      "homepage": "https://github.com/anant-barlota/girvi-sdk/tree/main/plugins/webhook",
+      "license": "MIT",
+      "versions": [
+        {
+          "version": "0.1.0",
+          "api": "girvi/v1",
+          "events": [
+            "loan.created",
+            "payment.received",
+            "loan.redeemed"
+          ],
+          "fields": [
+            "customer.name",
+            "customer.phone"
+          ],
+          "http_hosts": [
+            "{setting:url}"
+          ],
+          "bundle": {
+            "url": "https://github.com/anant-barlota/girvi-sdk/releases/download/webhook/v0.1.0/webhook-0.1.0.zip",
+            "sha256": "53d7e3ccdd67fe572d2105a07bb0fd7c73bbfb33aa50cb52876f8c32f9b5b743",
+            "size": 1439437
+          }
+        }
+      ]
+    }
+  ]
 }
